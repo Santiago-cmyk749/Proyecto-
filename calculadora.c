@@ -6,6 +6,13 @@ struct Gasto {
     char descripcion[50];
     float monto;
 };
+// BLOQUE RECURSIVO: Calcula la suma total de los montos recorriendo el arreglo de forma recursiva
+float sumarGastosRecursivo(struct Gasto gastos[], int n, int i) {
+    if (i >= n) { // Caso base: cuando el índice alcanza el número total de gastos
+        return 0;
+    }
+    return gastos[i].monto + sumarGastosRecursivo(gastos, n, i + 1);
+}
 
 int main() {
     struct Gasto misGastos[100];
@@ -21,10 +28,14 @@ int main() {
         printf("4. Guardar datos\n");
         printf("0. Salir\n");
         printf("Seleccione una opcion: ");
+        // BLOQUE DE CONTROL DE ENTRADA: Valida que el usuario ingrese un número entero
+        // Si el usuario ingresa letras, scanf falla y el bucle limpia el buffer para evitar errores
         if (scanf("%d", &opcion) != 1) {
-            while (getchar() != '\n');
-            opcion = -1;
+            printf("Error: Por favor, ingrese un numero del menu.\n");
+            while (getchar() != '\n'); 
+            opcion = -1; 
         }
+    
 
         switch(opcion) {
             case 1:
@@ -39,7 +50,10 @@ int main() {
                     misGastos[n].descripcion[strcspn(misGastos[n].descripcion, "\n")] = 0;
 
                     printf("Monto: ");
-                    scanf("%f", &misGastos[n].monto);
+                    while (scanf("%f", &misGastos[n].monto) !=1 || misGastos[n].monto < 0){
+                        printf("Error: Ingrese un monto numerico valido (positivo): ");
+                        while (getchar() != '\n');
+                    }
                     n++;
                     printf("Gasto registrado.\n");
                 } else {
@@ -47,13 +61,19 @@ int main() {
                 }
                 break;
 
-            case 2:
-                printf("Monto del ingreso: ");
+            case 2: {
+            // REGISTRO DE INGRESOS: Acumula montos positivos en la variable de ingresos
                 float nuevoIngreso;
-                scanf("%f", &nuevoIngreso);
+                printf("Monto del ingreso: ");
+                // Validación para evitar datos corruptos en el balance
+                while (scanf("%f", &nuevoIngreso) != 1 || nuevoIngreso < 0) {
+                    printf("Error: Ingrese un monto numerico valido: ");
+                    while (getchar() != '\n');
+                }
                 ingresos += nuevoIngreso;
-                printf("Ingreso registrado.\n");
+                printf("Ingreso registrado. Total actual: %.2f\n", ingresos);
                 break;
+            }
 
             case 3:
                 printf("\n--- Estado Actual ---\n");
