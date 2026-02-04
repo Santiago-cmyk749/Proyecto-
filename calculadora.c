@@ -1,3 +1,10 @@
+/* PROYECTO: Calculadora de Finanzas Personales
+   INTEGRANTES:
+   - Adrian Laya (31.128.099)
+   - Santiago Acosta (32.016.516)
+   - Jesús Pérez (32.025.632)
+*/
+
 #include <stdio.h>
 #include <string.h>
 
