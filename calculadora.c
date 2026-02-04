@@ -76,13 +76,52 @@ int main() {
             }
 
             case 3:
-                printf("\n--- Estado Actual ---\n");
-                printf("Total ingresos: %.2f\n", ingresos);
-                printf("Gastos registrados: %d\n", n);
-                break;
+                 {
+        float totalGastos = sumarGastosRecursivo(misGastos, n, 0);
+        // --- MEJORA: Formato de tabla profesional ---
+        printf("\n==============================");
+        printf("\n       ESTADO DE CUENTA");
+        printf("\n==============================");
+        printf("\n(+) Ingresos Totales:  %10.2f", ingresos);
+        printf("\n(-) Gastos Totales:    %10.2f", totalGastos);
+        printf("\n------------------------------");
+        printf("\n( Saldo Neto:        %10.2f", ingresos - totalGastos);
+        printf("\n==============================\n");
+    }
+    break;
 
             case 4:
-                printf("Guardando informacion...\n");
+                // REQUERIMIENTO 4: Guardar reporte detallado en archivo
+                printf("Guardando reporte detallado en 'finanzas.txt'...\n");
+                FILE *archivo = fopen("finanzas.txt", "w"); 
+                
+                if (archivo != NULL) {
+                    fprintf(archivo, "==========================================\n");
+                    fprintf(archivo, "       REPORTE DE GASTOS\n");
+                    fprintf(archivo, "==========================================\n");
+                    fprintf(archivo, "%-12s | %-20s | %-10s\n", "Fecha", "Descripcion", "Monto");
+                    fprintf(archivo, "------------------------------------------\n");
+
+                    // Bucle para persistencia completa de cada registro
+                    for (int i = 0; i < n; i++) {
+                        fprintf(archivo, "%-12s | %-20s | %10.2f\n", 
+                                misGastos[i].fecha, 
+                                misGastos[i].descripcion, 
+                                misGastos[i].monto);
+                    }
+
+                    float totalG = sumarGastosRecursivo(misGastos, n, 0);
+                    fprintf(archivo, "------------------------------------------\n");
+                    fprintf(archivo, "Ingresos Totales: %10.2f\n", ingresos);
+                    fprintf(archivo, "Gastos Totales:   %10.2f\n", totalG);
+                    fprintf(archivo, "Saldo Neto:       %10.2f\n", ingresos - totalG);
+                    fprintf(archivo, "==========================================\n");
+
+                    fclose(archivo);
+                    printf("¡Reporte completo generado con exito!\n");
+                } else {
+                    printf("Error: No se pudo crear el archivo.\n");
+                }
                 break;
 
             case 0:
